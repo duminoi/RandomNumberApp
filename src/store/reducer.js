@@ -1,12 +1,12 @@
+import { theme } from "@chakra-ui/react";
+
 export const initialValue = {
-  count: 0,
+  theme: true,
 };
 export const reducer = (state, action) => {
   switch (action.type) {
-    case "count/increment":
-      return { ...state, count: state.count + 1 };
-    case "count/decrement":
-      return { ...state, count: state.count - 1 };
+    case "theme/changeColor":
+      return { ...state, theme: !state.theme };
     default:
       return state;
   }

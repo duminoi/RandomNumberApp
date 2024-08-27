@@ -1,10 +1,17 @@
-import React from "react";
-import Count from "./Components/Count";
-
+import React, { useContext } from "react";
+import "./assets/App.css";
+import Title from "./Components/Title";
+import { ProviderContext } from "./store/Provider";
+import Switch from "./Components/Switch";
+import Data from "./Components/Data";
 export default function App() {
+  const { state, dispatch } = useContext(ProviderContext);
+  const background = state.theme ? "bg-white" : "bg-[#1a202c]";
   return (
-    <div>
-      <Count />
+    <div className={`p-[1rem] h-screen block relative ${background}`}>
+      <Switch />
+      <Title />
+      <Data />
     </div>
   );
 }

@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:where(*) {
+  border-width: 0px;
+  border-style: solid;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
