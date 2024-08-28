@@ -23,7 +23,7 @@ export default function Title() {
         /{state.maxTime} lần
       </h2>
       <h2 className="md:text-4xl min-[320px]:text-3xl  text-baseleading-[1.2] font-bold text-[#285e61]">
-        Bạn cần tím kiếm một số từ 1 đến {Math.floor(state.number)}
+        Bạn cần tìm kiếm một số từ 1 đến {Math.floor(state.number)}
       </h2>
       <Slider />
     </div>
