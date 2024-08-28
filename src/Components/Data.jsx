@@ -12,9 +12,28 @@ export default function Data() {
       dispatch({ type: "inputValue/setInput", payload: e.target.value });
     }
   };
-  useEffect(() => {
-    console.log(state.inputValue);
-  }, [state.inputValue]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const dataValue = formData.get("inputData");
+    console.log("randomNumber", state.randomNumber);
+
+    if (dataValue < state.randomNumber) {
+      dispatch({
+        type: "toast/setToast",
+        payload: "hmmm.... bạn cần tăng thêm chút nx",
+      });
+    } else {
+      dispatch({
+        type: "toast/setToast",
+        payload: "hmmm.... bạn cần giảm thêm chút nx",
+      });
+    }
+    dispatch({ type: "data/insert", payload: dataValue });
+  };
+
+  useEffect(() => {}, [state.inputValue]);
   useEffect(() => {
     const handleKeyDown = (e) => {
       const regex = /^[0-9]$/;
@@ -30,7 +49,12 @@ export default function Data() {
   return (
     <div>
       <div className="inputData">
-        <form action="">
+        <form
+          onSubmit={(e) => {
+            handleSubmit(e);
+          }}
+          action=""
+        >
           <div className="w-full relative">
             <label
               htmlFor=""
@@ -47,6 +71,7 @@ export default function Data() {
               onChange={(e) => {
                 handleChangeInput(e);
               }}
+              name="inputData"
               className="w-full h-[2.5rem] bg-transparent text-[1rem] ps-[1rem] pe-[1rem] rounded min-w-0  outline-[2px] border outline-offset-[2px] relative transition-all duration-[200ms] p-[1rem] "
               placeholder="Thử một số"
               value={state.inputValue}

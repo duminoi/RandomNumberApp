@@ -4,13 +4,13 @@ import CountResult from "./CountResult";
 
 export default function Table() {
   const { state, dispatch } = useContext(ProviderContext);
-  const result = [
-    { count: 1, value: 1 },
-    { count: 1, value: 1 },
-    { count: 1, value: 1 },
-    { count: 1, value: 1 },
-    { count: 1, value: 1 },
-  ];
+  // const result = [
+  //   { count: 1, value: 1 },
+  //   { count: 1, value: 1 },
+  //   { count: 1, value: 1 },
+  //   { count: 1, value: 1 },
+  //   { count: 1, value: 1 },
+  // ];
   const textColor = state.theme ? "" : "white";
   return (
     <div className="block whitespace-nowrap overflow-hidden max-w-[100%] border-[2px] border-solid border-[#2c7a7b] rounded-[8px] flex-shrink-0 w-[100vw] ">
@@ -40,8 +40,11 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {result.map((item, index) => {
-            return <CountResult key={index} {...item}></CountResult>;
+          {state.data.map((item, index) => {
+            console.log(index, item);
+            return (
+              <CountResult key={index} id={index} value={item}></CountResult>
+            );
           })}
         </tbody>
       </table>

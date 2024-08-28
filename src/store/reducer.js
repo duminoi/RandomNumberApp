@@ -5,6 +5,8 @@ export const initialValue = {
   toast: "idle",
   inputValue: "",
   maxTime: 0,
+  randomNumber: 0,
+  data: [],
 };
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -20,6 +22,10 @@ export const reducer = (state, action) => {
       return { ...state, inputValue: action.payload };
     case "maxTime/setMaxTime":
       return { ...state, maxTime: action.payload };
+    case "randomNumber/setNumber":
+      return { ...state, randomNumber: action.payload };
+    case "data/insert":
+      return { ...state, data: [...state.data, action.payload] };
     default:
       return state;
   }

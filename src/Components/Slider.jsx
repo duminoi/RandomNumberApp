@@ -1,29 +1,41 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import "../assets/slider.css";
 import { ProviderContext } from "../store/Provider";
+import { toast } from "react-toastify";
 export default function Slider() {
   const { state, dispatch } = useContext(ProviderContext);
   const [trackBarWidth, setTrackBarWidth] = useState(0);
   const trackBar = useRef();
   const dot = useRef();
   const fillTrack = useRef();
-  let RANGE_NUMBER = useRef(0);
-  const MAX_TIME = Math.ceil(Math.log2(RANGE_NUMBER.current));
+  let RANGE_NUMBER = useRef(state.number);
 
   let lastTrackBar = 0;
   let initClientX = 0;
   let numberValue = 0;
+
+  function getRandomNumber(min, max) {
+    // console.log("state.number:", state.number);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   const handleTrackBarMouseDown = (e) => {
-    console.log("offsetX", e.nativeEvent.offsetX);
+    // console.log("offsetX", e.nativeEvent.offsetX);
+    const MAX_TIME = Math.ceil(Math.log2(RANGE_NUMBER.current));
     const offsetX = e.nativeEvent.offsetX;
     const rate = (offsetX / trackBarWidth) * 100;
     fillTrack.current.style.width = rate + "%";
     lastTrackBar = offsetX;
     initClientX = e.clientX;
     numberValue = 100 + (rate / 100) * (2048 - 100);
-    console.log(numberValue);
+    // console.log(numberValue);
+
     dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
     dispatch({ type: "number/changeNumber", payload: numberValue });
+    dispatch({
+      type: "toast/setToast",
+      payload: "Chào mừng bạn đến với trò chơi đoán số",
+    });
     document.addEventListener("mousemove", handleSpanMouseMove);
     document.addEventListener("mouseup", handleSpanMouseUp);
   };
@@ -45,9 +57,16 @@ export default function Slider() {
   };
 
   const handleSpanMouseUp = () => {
-    console.log("xóa sự kiện");
+    // console.log("xóa sự kiện");
+    const MAX_TIME = Math.ceil(Math.log2(RANGE_NUMBER.current));
+
     dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
+    dispatch({
+      type: "toast/setToast",
+      payload: "Chào mừng bạn đến với trò chơi đoán số",
+    });
     document.removeEventListener("mousemove", handleSpanMouseMove);
+    document.removeEventListener("mouseup", handleSpanMouseUp);
   };
 
   const handleSpanMouseDown = (e) => {
@@ -64,8 +83,22 @@ export default function Slider() {
       setTrackBarWidth(trackBar.current.clientWidth);
     }
     RANGE_NUMBER.current = state.number;
-    console.log(RANGE_NUMBER);
+    dispatch({
+      type: "randomNumber/setNumber",
+      payload: getRandomNumber(100, state.number),
+    });
+    console.log("randomNumber", state.randomNumber);
   }, [state.number, trackBarWidth]);
+
+  useEffect(() => {
+    if (state.toast != "idle") {
+      toast(state.toast);
+      setTimeout(() => {
+        dispatch({ type: "toast/setToast", payload: "idle" });
+      }, 100);
+    }
+    return () => {};
+  }, [state.toast, toast]);
   return (
     <div className=" w-full h-[.4rem] bg-transparent relative rounded mt-3 ">
       <div style={{ color: colorText }} className="marker left-[4.65002%]">

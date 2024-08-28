@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { ProviderContext } from "../store/Provider";
 
-export default function CountResult({ count, value }) {
+export default function CountResult({ id, value }) {
   const { state, dispatch } = useContext(ProviderContext);
   const textColor = state.theme ? "" : "white";
   return (
     <tr>
       <td>
-        <p className="text-center text-[#68d391]">{count}</p>
+        <p className="text-center text-[#68d391]">{id + 1}</p>
         <hr className="opacity-[0.6] border-t-0 border-r-0 border-b-[1px] border-l-0 border-solid w-full" />
       </td>
       <td>
