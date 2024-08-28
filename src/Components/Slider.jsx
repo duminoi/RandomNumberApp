@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "../assets/slider.css";
 import { ProviderContext } from "../store/Provider";
 export default function Slider() {
@@ -7,30 +7,55 @@ export default function Slider() {
   const trackBar = useRef();
   const dot = useRef();
   const fillTrack = useRef();
+  let RANGE_NUMBER = useRef(0);
+  const MAX_TIME = Math.ceil(Math.log2(RANGE_NUMBER.current));
 
+  let lastTrackBar = 0;
+  let initClientX = 0;
+  let numberValue = 0;
   const handleTrackBarMouseDown = (e) => {
     console.log("offsetX", e.nativeEvent.offsetX);
-    console.log("clientX", e.clientX);
     const offsetX = e.nativeEvent.offsetX;
     const rate = (offsetX / trackBarWidth) * 100;
-    console.log("rate", rate);
     fillTrack.current.style.width = rate + "%";
+    lastTrackBar = offsetX;
+    initClientX = e.clientX;
+    numberValue = 100 + (rate / 100) * (2048 - 100);
+    console.log(numberValue);
+    dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
+    dispatch({ type: "number/changeNumber", payload: numberValue });
+    document.addEventListener("mousemove", handleSpanMouseMove);
+    document.addEventListener("mouseup", handleSpanMouseUp);
   };
 
   const handleSpanMouseMove = (e) => {
-    console.log(e.clientX);
+    console.log("clientWidth", trackBarWidth);
+    console.log("clientX", e.clientX);
+    const offsetTrackBar = e.clientX - initClientX + lastTrackBar;
+    const rate = (offsetTrackBar / trackBarWidth) * 100;
+    fillTrack.current.style.width = rate + "%";
+    numberValue = 100 + (rate / 100) * (2048 - 100);
+    dispatch({ type: "number/changeNumber", payload: numberValue });
+    if (rate <= 100) {
+      document.addEventListener("mousemove", handleSpanMouseMove);
+    }
+    if (rate > 100) {
+      document.removeEventListener("mousemove", handleSpanMouseMove);
+    }
+  };
+
+  const handleSpanMouseUp = () => {
+    console.log("xóa sự kiện");
+    dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
+    document.removeEventListener("mousemove", handleSpanMouseMove);
   };
 
   const handleSpanMouseDown = (e) => {
     console.log(e.nativeEvent.offsetX);
     e.stopPropagation();
     document.addEventListener("mousemove", handleSpanMouseMove);
+    document.addEventListener("mouseup", handleSpanMouseUp);
   };
-
-  const handleSpanMouseUp = (e) => {
-    document.removeEventListener("mousemove", handleSpanMouseMove);
-  };
-  document.addEventListener("mouseup", handleSpanMouseUp);
 
   const colorText = state.theme ? "" : "white";
   const bgColor = state.theme ? "bg-[#319795]" : "bg-[#81e6d9]";
@@ -38,7 +63,9 @@ export default function Slider() {
     if (trackBarWidth == 0) {
       setTrackBarWidth(trackBar.current.clientWidth);
     }
-  }, []);
+    RANGE_NUMBER.current = state.number;
+    console.log(RANGE_NUMBER);
+  }, [state.number, trackBarWidth]);
   return (
     <div className=" w-full h-[.4rem] bg-transparent relative rounded mt-3 ">
       <div style={{ color: colorText }} className="marker left-[4.65002%]">
@@ -73,7 +100,7 @@ export default function Slider() {
             onMouseDown={(e) => {
               handleSpanMouseDown(e);
             }}
-            className="dot absolute top-[-2px] right-0 w-[0.8rem] bg-white h-[0.8rem] rounded-[50%]"
+            className="dot absolute top-[-2px] right-[-5px] w-[0.8rem] bg-white h-[0.8rem] rounded-[50%]"
           ></span>
         </div>
       </div>
