@@ -29,7 +29,9 @@ export default function Slider() {
     initClientX = e.clientX;
     numberValue = 100 + (rate / 100) * (2048 - 100);
     // console.log(numberValue);
-
+    dispatch({ type: "data/remove" });
+    dispatch({ type: "playCount/remove" });
+    dispatch({ type: "playAgain/false" });
     dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
     dispatch({ type: "number/changeNumber", payload: numberValue });
     dispatch({
@@ -59,7 +61,9 @@ export default function Slider() {
   const handleSpanMouseUp = () => {
     // console.log("xóa sự kiện");
     const MAX_TIME = Math.ceil(Math.log2(RANGE_NUMBER.current));
-
+    dispatch({ type: "playCount/remove" });
+    dispatch({ type: "playAgain/false" });
+    dispatch({ type: "data/remove" });
     dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
     dispatch({
       type: "toast/setToast",
@@ -87,7 +91,7 @@ export default function Slider() {
       type: "randomNumber/setNumber",
       payload: getRandomNumber(100, state.number),
     });
-    console.log("randomNumber", state.randomNumber);
+    // console.log("randomNumber", state.randomNumber);
   }, [state.number, trackBarWidth]);
 
   useEffect(() => {
