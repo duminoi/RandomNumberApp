@@ -3,9 +3,9 @@ import Table from "./Table";
 import { ProviderContext } from "../store/Provider";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css";
+
 export default function Result() {
   const { state, dispatch } = useContext(ProviderContext);
-  console.log(state.playQuantity);
   const [notify, setNotify] = useState(null);
   const handleRemove = () => {
     const dialog = () => {
@@ -65,6 +65,7 @@ export default function Result() {
       ) : (
         ""
       )}
+      {/* notify */}
     </>
   );
 }

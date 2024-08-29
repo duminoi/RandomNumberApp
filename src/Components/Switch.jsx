@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ProviderContext } from "../store/Provider";
 
 export default function Switch() {
@@ -6,7 +6,11 @@ export default function Switch() {
   const handleClick = () => {
     dispatch({ type: "theme/changeColor" });
   };
-  const bg = state.theme ? "hover:bg-[#edf2f7]" : "hover:bg-[#585a5c]";
+  const theme = JSON.parse(localStorage.getItem("themeUi"));
+  const bg = theme ? "hover:bg-[#edf2f7]" : "hover:bg-[#585a5c]";
+  useEffect(() => {
+    localStorage.setItem("themeUi", JSON.stringify(state.theme));
+  }, [state.theme]);
   return (
     <div
       onClick={handleClick}

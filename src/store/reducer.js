@@ -1,5 +1,6 @@
+const theme = JSON.parse(localStorage.getItem("themeUi"));
 export const initialValue = {
-  theme: true,
+  theme: theme,
   number: 100,
   toast: "idle",
   inputValue: "",
