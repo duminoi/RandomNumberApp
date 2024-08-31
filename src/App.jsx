@@ -12,7 +12,7 @@ export default function App() {
   const background = state.theme ? "bg-white" : "bg-[#1a202c]";
   return (
     <>
-      <div className={`p-[1rem] h-screen block relative ${background}`}>
+      <div className={`p-[4rem] h-screen block relative ${background}`}>
         <Switch />
         <Title />
         <Data />

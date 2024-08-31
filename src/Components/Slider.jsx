@@ -10,9 +10,9 @@ export default function Slider() {
   const fillTrack = useRef();
   let RANGE_NUMBER = useRef(state.number);
 
-  let lastTrackBar = 0;
-  let initClientX = 0;
-  let numberValue = 0;
+  let lastTrackBar = useRef(0);
+  let initClientX = useRef(0);
+  let numberValue = useRef(0);
 
   function getRandomNumber(min, max) {
     // console.log("state.number:", state.number);
@@ -25,15 +25,16 @@ export default function Slider() {
     const offsetX = e.nativeEvent.offsetX;
     const rate = (offsetX / trackBarWidth) * 100;
     fillTrack.current.style.width = rate + "%";
-    lastTrackBar = offsetX;
-    initClientX = e.clientX;
-    numberValue = 100 + (rate / 100) * (2048 - 100);
+    lastTrackBar.current = offsetX;
+    initClientX.current = e.clientX;
+    numberValue.current = 100 + (rate / 100) * (2048 - 100);
     // console.log(numberValue);
+    console.log("lastTrackBar", lastTrackBar);
     dispatch({ type: "data/remove" });
     dispatch({ type: "playCount/remove" });
     dispatch({ type: "playAgain/false" });
     dispatch({ type: "maxTime/setMaxTime", payload: MAX_TIME });
-    dispatch({ type: "number/changeNumber", payload: numberValue });
+    dispatch({ type: "number/changeNumber", payload: numberValue.current });
     dispatch({
       type: "toast/setToast",
       payload: "Chào mừng bạn đến với trò chơi đoán số",
@@ -43,13 +44,21 @@ export default function Slider() {
   };
 
   const handleSpanMouseMove = (e) => {
-    console.log("clientWidth", trackBarWidth);
-    console.log("clientX", e.clientX);
-    const offsetTrackBar = e.clientX - initClientX + lastTrackBar;
+    e.stopPropagation();
+    // console.log("clientWidth", trackBarWidth);
+    // console.log("clientX", e.clientX);
+    // console.log("lastTrackBar2", lastTrackBar);
+    // console.log("initClientX", initClientX);
+
+    const offsetTrackBar =
+      e.clientX - initClientX.current + lastTrackBar.current;
+    // console.log("offset1", offsetTrackBar);
+    // const offsetTrackBar2 = e.offsetX;
+    // console.log("offset2", offsetTrackBar2);
     const rate = (offsetTrackBar / trackBarWidth) * 100;
     fillTrack.current.style.width = rate + "%";
-    numberValue = 100 + (rate / 100) * (2048 - 100);
-    dispatch({ type: "number/changeNumber", payload: numberValue });
+    numberValue.current = 100 + (rate / 100) * (2048 - 100);
+    dispatch({ type: "number/changeNumber", payload: numberValue.current });
     if (rate <= 100) {
       document.addEventListener("mousemove", handleSpanMouseMove);
     }
